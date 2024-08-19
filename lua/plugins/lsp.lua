@@ -12,6 +12,7 @@ return {
         "tailwindcss-language-server",
         "typescript-language-server",
         "css-lsp",
+        "pyright", -- Pyrightを追加
       })
     end,
   },
@@ -35,6 +36,22 @@ return {
       inlay_hints = { enabled = false },
       ---@type lspconfig.options
       servers = {
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "workspace",
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+          capabilities = (function()
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities.textDocument.references = true
+            return capabilities
+          end)(),
+        },
         gopls = {
           keys = {
             -- Workaround for the lack of a DAP strategy in neotest-go: https://github.com/nvim-neotest/neotest-go/issues/12
